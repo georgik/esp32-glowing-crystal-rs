@@ -52,8 +52,6 @@ fn main() -> ! {
     let mut led_strip =
         SmartLedsAdapter::new(rmt.channel1, led_strip_pin, rmt_buffer_led_strip, &clocks);
 
-    let delay = Delay::new(&clocks);
-
     let mut color = Hsv {
         hue: 0,
         sat: 255,
@@ -88,7 +86,7 @@ fn main() -> ! {
         match current_mode {
             Mode::Rainbow => {
                 // Iterate over the rainbow!
-                rainbow_hue = rainbow_hue + 1;
+                rainbow_hue += 1;
                 if rainbow_hue > 254 {
                     rainbow_hue = 0;
                 }
