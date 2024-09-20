@@ -28,13 +28,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Enable caching
-        uses: Swatinem/rust-cache@v2
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@v1
         with:
           target: riscv32imc-unknown-none-elf
-          toolchain: nightly
+          toolchain: stable
           components: rust-src, rustfmt, clippy
+      - name: Enable caching
+        uses: Swatinem/rust-cache@v2
       - name: Run command
         run: cargo ${{ matrix.action.command }} ${{ matrix.action.args }}
+      - name: Save image
+        run: cargo espflash save-image --chip esp32c3 --release --merge --skip-padding esp32-glowing-crystal-rs.bin
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32-glowing-crystal-rs.bin
+          path: esp32-glowing-crystal-rs.bin

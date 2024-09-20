@@ -1,34 +1,26 @@
 {
-    "version": 1,
-    "editor": "wokwi",
-    "author": "Juraj Michalek <juraj.michalek@gmail.com>",
-    "parts": [
-        {
-            "type": "",
-            "id": "esp",
-            "top": 0.59,
-            "left": 0.67,
-            "attrs": {
-                "flashSize": "16"
-            }
-        }
-    ],
-    "connections": [
-        [
-            "esp:TX",
-            "$serialMonitor:RX",
-            "",
-            []
-        ],
-        [
-            "esp:RX",
-            "$serialMonitor:TX",
-            "",
-            []
-        ]
-    ],
-    "serialMonitor": {
-        "display": "terminal",
-        "convertEol": true
-    }
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-c3-rust-1", "id": "esp", "top": -33.56, "left": 62.55, "attrs": {} },
+    { "type": "wokwi-neopixel", "id": "rgb1", "top": 25.3, "left": -58.6, "attrs": {} },
+    { "type": "wokwi-neopixel", "id": "rgb2", "top": 54.1, "left": -58.6, "attrs": {} },
+    { "type": "wokwi-neopixel", "id": "rgb3", "top": 82.9, "left": -58.6, "attrs": {} },
+    { "type": "wokwi-neopixel", "id": "rgb4", "top": 111.7, "left": -58.6, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:21", "$serialMonitor:RX", "", [] ],
+    [ "esp:20", "$serialMonitor:TX", "", [] ],
+    [ "rgb4:VSS", "esp:3V3", "red", [ "h66.4", "v-106.5" ] ],
+    [ "rgb4:DIN", "esp:6", "green", [ "h0" ] ],
+    [ "esp:GND", "rgb1:VDD", "black", [ "v-19.2", "h-124.8" ] ],
+    [ "rgb4:VDD", "rgb3:VSS", "red", [ "v-9.6", "h20" ] ],
+    [ "rgb3:VDD", "rgb2:VSS", "red", [ "v-9.6", "h20" ] ],
+    [ "rgb2:VDD", "rgb1:VSS", "red", [ "v-9.6", "h20" ] ],
+    [ "rgb4:DOUT", "rgb3:DIN", "green", [ "v27.9", "h38.4", "v-67.2" ] ],
+    [ "rgb3:DOUT", "rgb2:DIN", "green", [ "v8.7", "h48", "v-48" ] ],
+    [ "rgb2:DOUT", "rgb1:DIN", "green", [ "v8.7", "h57.6", "v-48" ] ]
+  ],
+  "dependencies": {}
 }

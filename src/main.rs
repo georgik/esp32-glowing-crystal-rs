@@ -21,6 +21,7 @@ use smart_leds::{
     SmartLedsWrite,
 };
 use esp_backtrace as _;
+use esp_println::println;
 
 // Modes
 enum Mode {
@@ -73,6 +74,8 @@ fn main() -> ! {
     let mut data_strip;
     let mut rainbow_hue = 0;
 
+    println!("Entering main loop...");
+
     loop {
         // Check button press to change mode
         if button.is_low() {
@@ -83,6 +86,7 @@ fn main() -> ! {
             };
             // Debouncing delay
             delay.delay_millis(1000u32);
+            println!("Change mode");
         }
 
         match current_mode {

@@ -14,3 +14,4 @@ Project is based on [ESP32-C3-Devkit-RUST](https://github.com/esp-rs/esp-rust-bo
 cargo run --release
 ```
 
+Code is based on example from https://github.com/esp-rs/esp-hal-community/blob/main/esp-hal-smartled/examples/hello_rgb.rs
