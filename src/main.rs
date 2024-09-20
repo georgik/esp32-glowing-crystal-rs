@@ -2,26 +2,18 @@
 #![no_main]
 
 use esp_hal::{
-    clock::ClockControl,
-    peripherals::Peripherals,
-    prelude::*,
-    system::SystemControl,
-    rmt::Rmt,
-    rng::Rng,
-    delay::Delay,
-    gpio::Io,
-    clock::CpuClock
+    clock::ClockControl, clock::CpuClock, delay::Delay, gpio::Io, peripherals::Peripherals,
+    prelude::*, rmt::Rmt, rng::Rng, system::SystemControl,
 };
 
+use esp_backtrace as _;
 use esp_hal_smartled::{smartLedBuffer, SmartLedsAdapter};
+use esp_println::println;
 use smart_leds::{
-    brightness,
-    gamma,
+    brightness, gamma,
     hsv::{hsv2rgb, Hsv},
     SmartLedsWrite,
 };
-use esp_backtrace as _;
-use esp_println::println;
 
 // Modes
 enum Mode {
@@ -29,7 +21,6 @@ enum Mode {
     Candle,
     Flame,
 }
-
 
 #[entry]
 fn main() -> ! {
@@ -52,8 +43,14 @@ fn main() -> ! {
     // On-board LED connected to pin 2
     let rmt_buffer_on_board_led = smartLedBuffer!(1);
     let rmt_buffer_led_strip = smartLedBuffer!(4);
-    let mut led = SmartLedsAdapter::new(rmt.channel0, on_board_led_pin, rmt_buffer_on_board_led, &clocks);
-    let mut led_strip = SmartLedsAdapter::new(rmt.channel1, led_strip_pin, rmt_buffer_led_strip, &clocks);
+    let mut led = SmartLedsAdapter::new(
+        rmt.channel0,
+        on_board_led_pin,
+        rmt_buffer_on_board_led,
+        &clocks,
+    );
+    let mut led_strip =
+        SmartLedsAdapter::new(rmt.channel1, led_strip_pin, rmt_buffer_led_strip, &clocks);
 
     let delay = Delay::new(&clocks);
 
@@ -68,7 +65,6 @@ fn main() -> ! {
         sat: 240,
         val: 180,
     };
-
 
     let mut data;
     let mut data_strip;
@@ -102,12 +98,13 @@ fn main() -> ! {
                 data_strip = [value, value, value, value];
 
                 led.write(brightness(gamma(data.iter().cloned()), 60))
-                .unwrap();
+                    .unwrap();
 
-                led_strip.write(brightness(gamma(data_strip.iter().cloned()), 60))
+                led_strip
+                    .write(brightness(gamma(data_strip.iter().cloned()), 60))
                     .unwrap();
                 delay.delay_millis(250u32);
-            },
+            }
             Mode::Candle => {
                 // Base brightness and flicker mask
                 let base_brightness: u8 = 180; // Adjust as needed
@@ -133,17 +130,17 @@ fn main() -> ! {
                 led.write(brightness(gamma(data.iter().cloned()), 60))
                     .unwrap();
 
-                led_strip.write(brightness(gamma(data_strip.iter().cloned()), 255))
+                led_strip
+                    .write(brightness(gamma(data_strip.iter().cloned()), 255))
                     .unwrap();
 
                 // Randomized delay
                 rng.read(&mut buf);
                 let delay_time = (buf[0] & 0x3F) + 50;
                 delay.delay_millis(delay_time as u32);
-            },
-
-            Mode::Flame => {
             }
+
+            Mode::Flame => {}
         }
     }
 }
